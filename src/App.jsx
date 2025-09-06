@@ -1,33 +1,42 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-import KiuchiProfile from './components/KiuchiProfile'
-import WakayamaProfile from './components/WakayamaProfile'
-import AustinProfile from './components/AustinProfile'
+import { supabase } from './supabase'
+import PlayerProfile from './components/PlayerProfile'
 
 function App() {
   const [currentView, setCurrentView] = useState('home')
+  const [players, setPlayers] = useState([])
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const { data, error } = await supabase
+        .from('players')
+        .select('*')
+      if (error) {
+        console.error('Error fetching players:', error)
+      } else {
+        setPlayers(data)
+      }
+    }
+    fetchPlayers()
+  }, [])
 
   const renderContent = () => {
-    switch(currentView) {
-      case 'kiuchi':
-        return <KiuchiProfile />
-      case 'wakayama':
-        return <WakayamaProfile />
-      case 'austin':
-        return <AustinProfile />
-      default:
-        return (
-          <div className="home-content">
-            <h1>TCUE-TT-Weakest-Tournament</h1>
-            <p className="tournament-description">
-              高崎経済大学卓球部 最弱決定戦
-            </p>
-            <p className="select-instruction">
-              参加者のプロフィールを見るには、上のナビゲーションから選手を選択してください。
-            </p>
-          </div>
-        )
+    if (currentView === 'home') {
+      return (
+        <div className="home-content">
+          <h1>TCUE-TT-Weakest-Tournament</h1>
+          <p className="tournament-description">
+            高崎経済大学卓球部 最弱決定戦
+          </p>
+          <p className="select-instruction">
+            参加者のプロフィールを見るには、上のナビゲーションから選手を選択してください。
+          </p>
+        </div>
+      )
     }
+    const player = players.find(p => p.name === currentView)
+    return <PlayerProfile player={player} />
   }
 
   return (
@@ -39,24 +48,15 @@ function App() {
         >
           ホーム
         </button>
-        <button 
-          className={`nav-button ${currentView === 'kiuchi' ? 'active' : ''}`}
-          onClick={() => setCurrentView('kiuchi')}
-        >
-          木内
-        </button>
-        <button 
-          className={`nav-button ${currentView === 'wakayama' ? 'active' : ''}`}
-          onClick={() => setCurrentView('wakayama')}
-        >
-          若山
-        </button>
-        <button 
-          className={`nav-button ${currentView === 'austin' ? 'active' : ''}`}
-          onClick={() => setCurrentView('austin')}
-        >
-          オースティン
-        </button>
+        {players.map(player => (
+          <button 
+            key={player.id}
+            className={`nav-button ${currentView === player.name ? 'active' : ''}`}
+            onClick={() => setCurrentView(player.name)}
+          >
+            {player.name}
+          </button>
+        ))}
       </nav>
       
       <main className="main-content">
