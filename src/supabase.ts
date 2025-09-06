@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { PlayerId } from './types'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -6,7 +7,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // 投票を挿入
-export const insertVote = async (playerId: string): Promise<any> => {
+export const insertVote = async (playerId: PlayerId): Promise<any> => {
   const { data, error } = await supabase
     .from('votes')
     .insert([{ player_id: playerId }])

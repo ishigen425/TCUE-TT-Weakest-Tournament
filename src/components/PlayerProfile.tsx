@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { insertVote } from '../supabase'
 import { PLAYERS } from '../data'
-import type { Player } from '../types'
+import type { Player, PlayerId } from '../types'
 
 interface PlayerTheme {
   primary: string
@@ -23,8 +23,8 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
   const [isVoting, setIsVoting] = useState<boolean>(false)
 
   // 選手ごとの色テーマを決定する関数
-  const getPlayerTheme = (playerName: string): PlayerTheme => {
-    if (playerName.includes('若山')) {
+  const getPlayerTheme = (playerId: PlayerId): PlayerTheme => {
+    if (playerId === 'wakayama') {
       return {
         primary: 'text-green-400',
         secondary: 'text-green-300',
@@ -35,7 +35,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
         buttonBorder: 'border-green-500',
         sectionBg: 'from-green-900 to-green-800'
       }
-    } else if (playerName.includes('木内')) {
+    } else if (playerId === 'kiuchi') {
       return {
         primary: 'text-blue-400',
         secondary: 'text-blue-300',
@@ -46,7 +46,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
         buttonBorder: 'border-blue-500',
         sectionBg: 'from-blue-900 to-blue-800'
       }
-    } else if (playerName.includes('オースティン')) {
+    } else if (playerId === 'austin') {
       return {
         primary: 'text-red-400',
         secondary: 'text-red-300',
@@ -71,7 +71,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
     }
   }
 
-  const theme = getPlayerTheme(player?.name || '')
+  const theme = getPlayerTheme(player?.id || '')
   const localstorageKey = "voted_player";
 
   useEffect(() => {
@@ -154,8 +154,8 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
                 <dd className="text-lg font-semibold text-white">高崎経済大学卓球部</dd>
               </div>
               <div className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
-                <dt className="text-sm font-medium text-gray-400">ポジション</dt>
-                <dd className="text-lg font-semibold text-white">挑戦者</dd>
+                <dt className="text-sm font-medium text-gray-400">出身地</dt>
+                <dd className="text-lg font-semibold text-white">{player.birthPlace}</dd>
               </div>
               <div className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
                 <dt className="text-sm font-medium text-gray-400">特技</dt>
@@ -192,17 +192,17 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
               戦績
             </h2>
             <div className="space-y-3">
-              <div className={`bg-gradient-to-r ${theme.sectionBg} bg-opacity-50 p-3 rounded-lg border ${theme.accent}`}>
-                <p className={`text-sm ${theme.secondary}`}>過去の大会での成績やエピソードがここに表示されます。</p>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-600">
-                <span className="text-sm text-gray-400">勝率</span>
-                <span className="font-semibold text-white">データ準備中</span>
-              </div>
-              <div className="flex justify-between items-center py-2 border-b border-gray-600">
-                <span className="text-sm text-gray-400">参加大会</span>
-                <span className="font-semibold text-white">データ準備中</span>
-              </div>
+              {player.warRecord && Array.isArray(player.warRecord) ? (
+                player.warRecord.map((record, index) => (
+                  <div key={index} className={`bg-gradient-to-r ${theme.sectionBg} bg-opacity-50 p-3 rounded-lg border ${theme.accent}`}>
+                    <span className="font-semibold text-white">{record}</span>
+                  </div>
+                ))
+              ) : (
+                <div className={`bg-gradient-to-r ${theme.sectionBg} bg-opacity-50 p-3 rounded-lg border ${theme.accent}`}>
+                  <p className={`text-sm ${theme.secondary}`}>戦績データがありません。</p>
+                </div>
+              )}
             </div>
           </div>
 

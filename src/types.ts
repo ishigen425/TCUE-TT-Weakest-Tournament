@@ -1,7 +1,11 @@
+export type PlayerId = 'kiuchi' | 'wakayama' | 'austin' | '';
+
 // 選手の型定義
 export interface Player {
-  id: string;
+  id: PlayerId;
   name: string;
+  birthPlace: string;
+  warRecord: string[];
   profile: string;
   created_at?: string;
 }
