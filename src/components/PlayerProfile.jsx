@@ -1,6 +1,33 @@
+import { useState, useEffect } from 'react'
+import { insertVote } from '../supabase'
 import './PlayerProfile.css'
 
 function PlayerProfile({ player }) {
+  const [hasVoted, setHasVoted] = useState(false)
+  const [isVoting, setIsVoting] = useState(false)
+
+  useEffect(() => {
+    const voted = localStorage.getItem(`voted_${player.id}`)
+    if (voted) {
+      setHasVoted(true)
+    }
+  }, [player.id])
+
+  const handleVote = async () => {
+    if (hasVoted) return
+    setIsVoting(true)
+    try {
+      await insertVote(player.id)
+      localStorage.setItem(`voted_${player.id}`, 'true')
+      setHasVoted(true)
+    } catch (error) {
+      console.error('投票に失敗しました:', error)
+      alert('投票に失敗しました。もう一度お試しください。')
+    } finally {
+      setIsVoting(false)
+    }
+  }
+
   if (!player) return <div>Player not found</div>
 
   return (
@@ -36,6 +63,17 @@ function PlayerProfile({ player }) {
           <blockquote className="player-comment">
             {player.profile || "「この大会で自分の実力を試したいと思います。最弱の座を目指して頑張ります！」"}
           </blockquote>
+        </div>
+
+        <div className="profile-section">
+          <h3>投票</h3>
+          <button 
+            onClick={handleVote} 
+            disabled={hasVoted || isVoting}
+            className="vote-button"
+          >
+            {hasVoted ? '投票済み' : isVoting ? '投票中...' : 'この選手に投票'}
+          </button>
         </div>
       </div>
     </div>
