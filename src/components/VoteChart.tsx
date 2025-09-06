@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { getVoteCounts } from '../supabase'
 import { PLAYERS } from '../data'
+import { PlayerId } from '../types'
 
 interface ChartData {
+  id: PlayerId
   name: string
   votes: number
   color: string
@@ -15,12 +17,12 @@ function VoteChart(): React.JSX.Element {
   const [totalVotes, setTotalVotes] = useState<number>(0)
 
   // 選手ごとの色を決定する関数
-  const getPlayerColor = (playerName: string): string => {
-    if (playerName.includes('木内')) {
+  const getPlayerColor = (playerId: PlayerId): string => {
+    if (playerId === 'kiuchi') {
       return '#3b82f6' // blue-500 (青系)
-    } else if (playerName.includes('若山')) {
+    } else if (playerId === 'wakayama') {
       return '#10b981' // emerald-500 (緑系)
-    } else if (playerName.includes('オースティン')) {
+    } else if (playerId === 'austin') {
       return '#ef4444' // red-500 (赤系)
     }
     // デフォルト色（その他の選手用）
@@ -34,9 +36,10 @@ function VoteChart(): React.JSX.Element {
         const voteCounts = await getVoteCounts()
 
         const chartData: ChartData[] = PLAYERS.map(player => ({
+          id: player.id,
           name: player.name,
           votes: voteCounts[player.id] || 0,
-          color: getPlayerColor(player.name)
+          color: getPlayerColor(player.id)
         }))
 
         const total = chartData.reduce((sum, player) => sum + player.votes, 0)
@@ -152,7 +155,7 @@ function VoteChart(): React.JSX.Element {
             .sort((a, b) => b.votes - a.votes)
             .map((player, index) => {
               const percentage = totalVotes > 0 ? ((player.votes / totalVotes) * 100).toFixed(1) : 0
-              const playerColor = getPlayerColor(player.name)
+              const playerColor = getPlayerColor(player.id || '')
               return (
                 <div key={player.name} className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
                   <div className="flex items-center justify-between mb-2">
