@@ -1,15 +1,21 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { getVoteCounts } from '../supabase'
 import { PLAYERS } from '../data'
 
-function VoteChart() {
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [totalVotes, setTotalVotes] = useState(0)
+interface ChartData {
+  name: string
+  votes: number
+  color: string
+}
+
+function VoteChart(): React.JSX.Element {
+  const [data, setData] = useState<ChartData[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [totalVotes, setTotalVotes] = useState<number>(0)
 
   // 選手ごとの色を決定する関数
-  const getPlayerColor = (playerName) => {
+  const getPlayerColor = (playerName: string): string => {
     if (playerName.includes('木内')) {
       return '#3b82f6' // blue-500 (青系)
     } else if (playerName.includes('若山')) {
@@ -22,14 +28,15 @@ function VoteChart() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
         setLoading(true)
         const voteCounts = await getVoteCounts()
 
-        const chartData = PLAYERS.map(player => ({
+        const chartData: ChartData[] = PLAYERS.map(player => ({
           name: player.name,
-          votes: voteCounts[player.id] || 0
+          votes: voteCounts[player.id] || 0,
+          color: getPlayerColor(player.name)
         }))
 
         const total = chartData.reduce((sum, player) => sum + player.votes, 0)
@@ -97,13 +104,15 @@ function VoteChart() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
+                label={({ name, percent }: { name?: string; percent?: number }) => 
+                  `${name || ''} ${percent ? (percent * 100).toFixed(1) : '0'}%`
+                }
                 outerRadius={120}
                 fill="#8884d8"
                 dataKey="votes"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={getPlayerColor(entry.name)} />
+                  <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip 
