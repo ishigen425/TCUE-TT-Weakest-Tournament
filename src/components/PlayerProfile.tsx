@@ -1,13 +1,29 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { insertVote } from '../supabase'
 import { PLAYERS } from '../data'
+import type { Player } from '../types'
 
-function PlayerProfile({ player }) {
-  const [votedPlayer, setVotedPlayer] = useState('')
-  const [isVoting, setIsVoting] = useState(false)
+interface PlayerTheme {
+  primary: string
+  secondary: string
+  accent: string
+  gradient: string
+  badge: string
+  button: string
+  buttonBorder: string
+  sectionBg: string
+}
+
+interface PlayerProfileProps {
+  player: Player | undefined
+}
+
+function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
+  const [votedPlayer, setVotedPlayer] = useState<string>('')
+  const [isVoting, setIsVoting] = useState<boolean>(false)
 
   // 選手ごとの色テーマを決定する関数
-  const getPlayerTheme = (playerName) => {
+  const getPlayerTheme = (playerName: string): PlayerTheme => {
     if (playerName.includes('若山')) {
       return {
         primary: 'text-green-400',
@@ -59,6 +75,7 @@ function PlayerProfile({ player }) {
   const localstorageKey = "voted_player";
 
   useEffect(() => {
+    if (!player) return
     // ローカルストレージで投票済みか確認
     // 各端末で1回しか投票できないようにする
     const selectedPlayerId = localStorage.getItem(localstorageKey)
@@ -67,15 +84,15 @@ function PlayerProfile({ player }) {
         PLAYERS.find(p => p.id === selectedPlayerId)?.name || ''
       )
     }
-  }, [player.id])
+  }, [player?.id])
 
-  const handleVote = async () => {
-    if (votedPlayer) return
+  const handleVote = async (): Promise<void> => {
+    if (votedPlayer || !player) return
     setIsVoting(true)
     try {
       await insertVote(player.id)
-      localStorage.setItem(localstorageKey, player?.id || '')
-      setVotedPlayer(player?.name || '') // 投票した選手名を状態に保存
+      localStorage.setItem(localstorageKey, player.id)
+      setVotedPlayer(player.name) // 投票した選手名を状態に保存
     } catch (error) {
       console.error('投票に失敗しました:', error)
       alert('投票に失敗しました。もう一度お試しください。')
@@ -200,7 +217,7 @@ function PlayerProfile({ player }) {
             </p>
             <button 
               onClick={handleVote} 
-              disabled={votedPlayer || isVoting}
+              disabled={Boolean(votedPlayer) || isVoting}
               className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
                 votedPlayer 
                   ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 

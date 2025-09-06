@@ -1,13 +1,21 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import PlayerProfile from './components/PlayerProfile'
 import VoteChart from './components/VoteChart'
 import { PLAYERS } from './data'
 
-function App() {
-  const [currentView, setCurrentView] = useState('home')
+type ViewType = 'home' | 'results' | string
+
+interface PlayerTheme {
+  border: string
+  button: string
+  accent: string
+}
+
+function App(): React.JSX.Element {
+  const [currentView, setCurrentView] = useState<ViewType>('home')
 
   // 選手ごとの色テーマを決定する関数
-  const getPlayerTheme = (playerName) => {
+  const getPlayerTheme = (playerName: string): PlayerTheme => {
     if (playerName.includes('若山')) {
       return {
         border: 'hover:border-green-400',

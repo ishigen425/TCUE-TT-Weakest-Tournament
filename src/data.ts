@@ -1,5 +1,7 @@
 // 選手データ（定数）
-export const PLAYERS = [
+import { Player } from './types';
+
+export const PLAYERS: Player[] = [
   {
     id: 'kiuchi',
     name: '木内',
