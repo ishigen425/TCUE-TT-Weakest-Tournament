@@ -7,6 +7,35 @@ function App() {
   const [currentView, setCurrentView] = useState('home')
   const [players, setPlayers] = useState([])
 
+  // 選手ごとの色テーマを決定する関数
+  const getPlayerTheme = (playerName) => {
+    if (playerName.includes('若山')) {
+      return {
+        border: 'hover:border-green-400',
+        button: 'bg-green-500 hover:bg-green-600',
+        accent: 'text-green-400'
+      }
+    } else if (playerName.includes('木内')) {
+      return {
+        border: 'hover:border-blue-400',
+        button: 'bg-blue-500 hover:bg-blue-600',
+        accent: 'text-blue-400'
+      }
+    } else if (playerName.includes('オースティン')) {
+      return {
+        border: 'hover:border-red-400',
+        button: 'bg-red-500 hover:bg-red-600',
+        accent: 'text-red-400'
+      }
+    }
+    // デフォルト（ゴールド系）
+    return {
+      border: 'hover:border-yellow-400',
+      button: 'bg-yellow-400 hover:bg-yellow-500',
+      accent: 'text-yellow-400'
+    }
+  }
+
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
@@ -22,42 +51,54 @@ function App() {
   const renderContent = () => {
     if (currentView === 'home') {
       return (
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="card mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary-700 mb-6">
+        <div className="max-w-6xl mx-auto text-center">
+          {/* メイン画像セクション */}
+          <div className="mb-8">
+            <img 
+              src="/top.jpg" 
+              alt="高崎経済大学卓球部 最弱決定戦 2025.11.8" 
+              className="w-full max-w-4xl mx-auto rounded-lg shadow-2xl"
+            />
+          </div>
+          
+          <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 mb-8 border border-gray-700">
+            <h1 className="text-4xl md:text-6xl font-bold text-yellow-400 mb-6">
               TCUE-TT
             </h1>
-            <h2 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-4">
+            <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
               最弱決定戦
             </h2>
-            <p className="text-lg text-gray-600 mb-6">
-              高崎経済大学卓球部 最弱決定戦
+            <p className="text-lg text-gray-300 mb-6">
+              高崎経済大学卓球部 最弱決定戦 2025.11.8
             </p>
-            <div className="bg-blue-50 border-l-4 border-primary-500 p-4 rounded-r-lg">
-              <p className="text-primary-700 font-medium">
+            <div className="bg-gray-800 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+              <p className="text-yellow-200 font-medium">
                 参加者のプロフィールを見るには、上のナビゲーションから選手を選択してください。
               </p>
             </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {players.map(player => (
-              <div 
-                key={player.id}
-                className="card cursor-pointer hover:scale-105 transition-transform duration-300"
-                onClick={() => setCurrentView(player.name)}
-              >
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{player.name}</h3>
-                <p className="text-gray-600 text-sm overflow-hidden" style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical'
-                }}>{player.profile}</p>
-                <button className="btn-primary mt-4 w-full">
-                  プロフィールを見る
-                </button>
-              </div>
-            ))}
+            {players.map(player => {
+              const theme = getPlayerTheme(player.name)
+              return (
+                <div 
+                  key={player.id}
+                  className={`bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-6 cursor-pointer hover:scale-105 transition-transform duration-300 border border-gray-700 ${theme.border}`}
+                  onClick={() => setCurrentView(player.name)}
+                >
+                  <h3 className={`text-xl font-semibold ${theme.accent} mb-2`}>{player.name}</h3>
+                  <p className="text-gray-300 text-sm overflow-hidden" style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical'
+                  }}>{player.profile}</p>
+                  <button className={`${theme.button} text-black font-semibold py-2 px-4 rounded mt-4 w-full transition-colors duration-200`}>
+                    プロフィールを見る
+                  </button>
+                </div>
+              )
+            })}
           </div>
         </div>
       )
@@ -78,20 +119,20 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-black shadow-lg border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary-700">TCUE-TT</h1>
+              <h1 className="text-2xl font-bold text-yellow-400">TCUE-TT</h1>
             </div>
           </div>
         </div>
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+      <nav className="bg-gray-900 shadow-lg border-b border-gray-700 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 overflow-x-auto py-4">
             <button 
@@ -125,7 +166,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-16">
+      <footer className="bg-black text-white py-8 mt-16 border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-300">© 2025 高崎経済大学卓球部 最弱決定戦</p>
         </div>
