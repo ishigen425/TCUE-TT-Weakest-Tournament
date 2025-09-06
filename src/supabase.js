@@ -5,15 +5,6 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// 選手一覧を取得
-export const getPlayers = async () => {
-  const { data, error } = await supabase
-    .from('players')
-    .select('*')
-  if (error) throw error
-  return data
-}
-
 // 投票を挿入
 export const insertVote = async (playerId) => {
   const { data, error } = await supabase

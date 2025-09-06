@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { getPlayers, getVoteCounts } from '../supabase'
+import { getVoteCounts } from '../supabase'
+import { PLAYERS } from '../data'
 
 function VoteChart() {
   const [data, setData] = useState([])
@@ -24,10 +25,9 @@ function VoteChart() {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const players = await getPlayers()
         const voteCounts = await getVoteCounts()
 
-        const chartData = players.map(player => ({
+        const chartData = PLAYERS.map(player => ({
           name: player.name,
           votes: voteCounts[player.id] || 0
         }))
@@ -75,14 +75,10 @@ function VoteChart() {
         </p>
         
         {/* 統計情報 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg border border-blue-700">
             <div className="text-2xl font-bold text-blue-400">{totalVotes}</div>
             <div className="text-sm text-blue-300">総投票数</div>
-          </div>
-          <div className="bg-green-900 bg-opacity-50 p-4 rounded-lg border border-green-700">
-            <div className="text-2xl font-bold text-green-400">{data.length}</div>
-            <div className="text-sm text-green-300">参加選手数</div>
           </div>
           <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg border border-yellow-700">
             <div className="text-2xl font-bold text-yellow-400">{winner?.name || '-'}</div>

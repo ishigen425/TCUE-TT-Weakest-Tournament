@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { insertVote } from '../supabase'
+import { PLAYERS } from '../data'
 
 function PlayerProfile({ player }) {
-  const [hasVoted, setHasVoted] = useState(false)
+  const [votedPlayer, setVotedPlayer] = useState('')
   const [isVoting, setIsVoting] = useState(false)
 
   // 選手ごとの色テーマを決定する関数
@@ -55,21 +56,26 @@ function PlayerProfile({ player }) {
   }
 
   const theme = getPlayerTheme(player?.name || '')
+  const localstorageKey = "voted_player";
 
   useEffect(() => {
-    const voted = localStorage.getItem(`voted_${player.id}`)
-    if (voted) {
-      setHasVoted(true)
+    // ローカルストレージで投票済みか確認
+    // 各端末で1回しか投票できないようにする
+    const selectedPlayerId = localStorage.getItem(localstorageKey)
+    if (selectedPlayerId) {
+      setVotedPlayer(
+        PLAYERS.find(p => p.id === selectedPlayerId)?.name || ''
+      )
     }
   }, [player.id])
 
   const handleVote = async () => {
-    if (hasVoted) return
+    if (votedPlayer) return
     setIsVoting(true)
     try {
       await insertVote(player.id)
-      localStorage.setItem(`voted_${player.id}`, 'true')
-      setHasVoted(true)
+      localStorage.setItem(localstorageKey, player?.id || '')
+      setVotedPlayer(player?.name || '') // 投票した選手名を状態に保存
     } catch (error) {
       console.error('投票に失敗しました:', error)
       alert('投票に失敗しました。もう一度お試しください。')
@@ -194,19 +200,19 @@ function PlayerProfile({ player }) {
             </p>
             <button 
               onClick={handleVote} 
-              disabled={hasVoted || isVoting}
+              disabled={votedPlayer || isVoting}
               className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
-                hasVoted 
+                votedPlayer 
                   ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
                   : isVoting 
                     ? `bg-gradient-to-r ${theme.button.split(' ')[0]} ${theme.button.split(' ')[1]} text-black cursor-wait` 
                     : `bg-gradient-to-r ${theme.button} text-black transform hover:scale-105 shadow-lg hover:shadow-xl`
               }`}
             >
-              {hasVoted ? (
+              {votedPlayer ? (
                 <span className="flex items-center justify-center">
                   <span className="mr-2">✅</span>
-                  投票済み
+                  {votedPlayer}さんに投票済み
                 </span>
               ) : isVoting ? (
                 <span className="flex items-center justify-center">
@@ -223,7 +229,7 @@ function PlayerProfile({ player }) {
                 </span>
               )}
             </button>
-            {hasVoted && (
+            {votedPlayer && (
               <p className="text-xs text-gray-400 mt-2 text-center">
                 投票ありがとうございました！
               </p>
