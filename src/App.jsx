@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import { supabase } from './supabase'
+import { getPlayers } from './supabase'
 import PlayerProfile from './components/PlayerProfile'
+import VoteChart from './components/VoteChart'
 
 function App() {
   const [currentView, setCurrentView] = useState('home')
@@ -9,13 +10,11 @@ function App() {
 
   useEffect(() => {
     const fetchPlayers = async () => {
-      const { data, error } = await supabase
-        .from('players')
-        .select('*')
-      if (error) {
-        console.error('Error fetching players:', error)
-      } else {
+      try {
+        const data = await getPlayers()
         setPlayers(data)
+      } catch (error) {
+        console.error('Error fetching players:', error)
       }
     }
     fetchPlayers()
@@ -35,6 +34,9 @@ function App() {
         </div>
       )
     }
+    if (currentView === 'results') {
+      return <VoteChart />
+    }
     const player = players.find(p => p.name === currentView)
     return <PlayerProfile player={player} />
   }
@@ -47,6 +49,12 @@ function App() {
           onClick={() => setCurrentView('home')}
         >
           ホーム
+        </button>
+        <button 
+          className={`nav-button ${currentView === 'results' ? 'active' : ''}`}
+          onClick={() => setCurrentView('results')}
+        >
+          投票結果
         </button>
         {players.map(player => (
           <button 

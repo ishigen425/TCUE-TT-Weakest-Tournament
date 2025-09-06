@@ -47,10 +47,6 @@
   font-style: italic;
 }
 
-.profile-content {
-  space-y: 1.5rem;
-}
-
 .profile-section {
   margin-bottom: 2rem;
 }
@@ -109,6 +105,26 @@
   font-style: italic;
   color: #2c3e50;
   line-height: 1.6;
+}
+
+.vote-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.vote-button:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.vote-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
 }
 
 /* Dark mode support */
