@@ -7,11 +7,12 @@
 - Supabaseプロジェクト: https://eeldtlmtzxxcbraehzgs.supabase.co
 - 認証: anon keyを使用
 - データベース: PostgreSQL
+- supabaseコマンドはnpxで実行
 
 ### 環境変数 (.env)
 ```
 VITE_SUPABASE_URL=https://eeldtlmtzxxcbraehzgs.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVlbGR0bG10enh4Y2JyYWVoemdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMzg3MTksImV4cCI6MjA3MjcxNDcxOX0.hzJLxAeYbe8bvPgBhmODribkvgmoIjoFceTv7IcZZ28
+VITE_SUPABASE_ANON_KEY=
 ```
 
 ### データベーススキーマ
