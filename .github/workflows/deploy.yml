@@ -23,8 +23,8 @@ jobs:
 
       - name: Build
         run: |
-          export VITE_SUPABASE_URL=${{ secrets.SUPABASE_URL }}
-          export VITE_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          export VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
+          export VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
           npm run build
 
       - name: Deploy to Netlify
