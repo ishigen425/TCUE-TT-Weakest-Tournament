@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { getVoteCounts } from '../supabase'
 import { PLAYERS } from '../data'
 import { PlayerId } from '../types'
+import VoteChartHeader from './VoteChartHeader'
+import VoteChartPie from './VoteChartPie'
+import VoteChartDetails from './VoteChartDetails'
+import VoteChartNotice from './VoteChartNotice'
+import UserVoteStatus from './UserVoteStatus'
 
-interface ChartData {
+export interface ChartData {
   id: PlayerId
   name: string
   votes: number
@@ -74,137 +78,11 @@ function VoteChart(): React.JSX.Element {
 
   return (
     <div className="space-y-8">
-      {/* ヘッダー */}
-      <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border border-gray-700 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 flex items-center justify-center">
-          <span className="mr-3">📊</span>
-          投票結果
-        </h1>
-        <p className="text-lg text-gray-300 mb-6">
-          最弱決定戦の投票結果をリアルタイムで表示しています
-        </p>
-        
-        {/* 統計情報 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-blue-900 bg-opacity-50 p-4 rounded-lg border border-blue-700">
-            <div className="text-2xl font-bold text-blue-400">{totalVotes}</div>
-            <div className="text-sm text-blue-300">総投票数</div>
-          </div>
-          <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg border border-yellow-700">
-            <div className="text-2xl font-bold text-yellow-400">{winner?.name || '-'}</div>
-            <div className="text-sm text-yellow-300">現在1位</div>
-          </div>
-        </div>
-      </div>
-
-      {/* チャート */}
-      <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border border-gray-700">
-        <div className="w-full h-96">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }: { name?: string; percent?: number }) => 
-                  `${name || ''} ${percent ? (percent * 100).toFixed(1) : '0'}%`
-                }
-                outerRadius={120}
-                fill="#8884d8"
-                dataKey="votes"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip 
-                formatter={(value) => [`${value}票`, '投票数']}
-                labelFormatter={(label) => `選手: ${label}`}
-                contentStyle={{
-                  backgroundColor: '#1f2937',
-                  border: '1px solid #374151',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                  color: '#ffffff'
-                }}
-              />
-              <Legend 
-                verticalAlign="bottom" 
-                height={36}
-                formatter={(value) => `${value}`}
-                wrapperStyle={{ paddingTop: '20px', color: '#ffffff' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        {totalVotes === 0 && (
-          <div className="text-center mt-4 p-8">
-            <div className="text-6xl mb-4">🗳️</div>
-            <p className="text-xl text-gray-300 mb-2">まだ投票がありません</p>
-            <p className="text-sm text-gray-400">選手のプロフィールページから投票してください</p>
-          </div>
-        )}
-      </div>
-
-      {/* 詳細結果 */}
-      <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border border-gray-700">
-        <h2 className="text-2xl font-bold text-yellow-400 mb-6">詳細結果</h2>
-        <div className="space-y-4">
-          {data
-            .sort((a, b) => b.votes - a.votes)
-            .map((player, index) => {
-              const percentage = totalVotes > 0 ? ((player.votes / totalVotes) * 100).toFixed(1) : 0
-              const playerColor = getPlayerColor(player.id || '')
-              return (
-                <div key={player.name} className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-3">
-                      <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-white font-bold text-sm ${
-                        index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-600' : 'bg-gray-500'
-                      }`}>
-                        {index + 1}
-                      </span>
-                      <div className="flex items-center space-x-2">
-                        <div 
-                          className="w-4 h-4 rounded-full"
-                          style={{ backgroundColor: playerColor }}
-                        ></div>
-                        <span className="text-lg font-semibold text-white">{player.name}</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xl font-bold text-white">{player.votes}票</div>
-                      <div className="text-sm text-gray-300">{percentage}%</div>
-                    </div>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${percentage}%`,
-                        backgroundColor: playerColor
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              )
-            })}
-        </div>
-      </div>
-
-      {/* 注意事項 */}
-      <div className="bg-blue-900 bg-opacity-50 border border-blue-700 rounded-lg p-4">
-        <div className="flex items-start space-x-3">
-          <span className="text-blue-400 text-xl">ℹ️</span>
-          <div>
-            <h3 className="text-blue-300 font-semibold mb-1">投票について</h3>
-            <p className="text-blue-200 text-sm">
-              投票結果はリアルタイムで更新されます。各選手には一度だけ投票することができます。
-            </p>
-          </div>
-        </div>
-      </div>
+      <VoteChartHeader totalVotes={totalVotes} winnerName={winner?.name} />
+      <UserVoteStatus />
+      <VoteChartPie data={data} totalVotes={totalVotes} />
+      <VoteChartDetails data={data} totalVotes={totalVotes} getPlayerColor={getPlayerColor} />
+      <VoteChartNotice />
     </div>
   )
 }

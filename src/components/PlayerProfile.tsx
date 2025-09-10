@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { insertVote } from '../supabase'
-import { PLAYERS } from '../data'
+import VoteSuccessModal from './VoteSuccessModal'
 import type { Player, PlayerId } from '../types'
 
 interface PlayerTheme {
@@ -21,6 +21,7 @@ interface PlayerProfileProps {
 function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
   const [votedPlayer, setVotedPlayer] = useState<string>('')
   const [isVoting, setIsVoting] = useState<boolean>(false)
+  const [showVoteModal, setShowVoteModal] = useState<boolean>(false)
 
   // 選手ごとの色テーマを決定する関数
   const getPlayerTheme = (playerId: PlayerId): PlayerTheme => {
@@ -80,19 +81,25 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
     // 各端末で1回しか投票できないようにする
     const selectedPlayerId = localStorage.getItem(localstorageKey)
     if (selectedPlayerId) {
-      setVotedPlayer(
-        PLAYERS.find(p => p.id === selectedPlayerId)?.name || ''
-      )
+      // setVotedPlayer(
+      //   PLAYERS.find(p => p.id === selectedPlayerId)?.name || ''
+      // )
     }
   }, [player?.id])
 
   const handleVote = async (): Promise<void> => {
     if (votedPlayer || !player) return
+    
+    // 投票前の確認
+    const isConfirmed = confirm('1人1度しか投票できません。本当にそれで良いですか？')
+    if (!isConfirmed) return
+    
     setIsVoting(true)
     try {
       await insertVote(player.id)
       localStorage.setItem(localstorageKey, player.id)
       setVotedPlayer(player.name) // 投票した選手名を状態に保存
+      setShowVoteModal(true) // 投票成功モーダルを表示
     } catch (error) {
       console.error('投票に失敗しました:', error)
       alert('投票に失敗しました。もう一度お試しください。')
@@ -254,6 +261,16 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
           </div>
         </div>
       </div>
+
+      {/* 投票成功モーダル */}
+      {player && (
+        <VoteSuccessModal
+          isOpen={showVoteModal}
+          player={player}
+          theme={theme}
+          onClose={() => setShowVoteModal(false)}
+        />
+      )}
     </div>
   )
 }
