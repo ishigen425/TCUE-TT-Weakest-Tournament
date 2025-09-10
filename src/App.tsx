@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import PlayerProfile from './components/PlayerProfile'
 import VoteChart from './components/VoteChart'
+import EndRollColumn from './components/EndRollColumn'
 import { PLAYERS } from './data'
 
-type ViewType = 'home' | 'results' | string
+type ViewType = 'home' | 'results' | 'column' | string
 
 interface PlayerTheme {
   border: string
@@ -13,6 +14,7 @@ interface PlayerTheme {
 
 function App(): React.JSX.Element {
   const [currentView, setCurrentView] = useState<ViewType>('home')
+  const [showEndRollPreview, setShowEndRollPreview] = useState(true)
 
   // 選手ごとの色テーマを決定する関数
   const getPlayerTheme = (playerName: string): PlayerTheme => {
@@ -44,6 +46,16 @@ function App(): React.JSX.Element {
   }
 
   const renderContent = () => {
+    if (currentView === 'column') {
+      return (
+        <EndRollColumn 
+          isPreview={false}
+          onClose={() => setCurrentView('home')}
+          onContinue={() => {}} // フル版では使用しない
+        />
+      )
+    }
+    
     if (currentView === 'home') {
       return (
         <div className="max-w-6xl mx-auto text-center">
@@ -142,6 +154,12 @@ function App(): React.JSX.Element {
             >
               📊 投票結果
             </button>
+            <button 
+              className={`nav-link whitespace-nowrap px-3 py-2 ${currentView === 'column' ? 'active' : ''}`}
+              onClick={() => setCurrentView('column')}
+            >
+              📖 コラム
+            </button>
             {PLAYERS.map(player => (
               <button 
                 key={player.id}
@@ -159,6 +177,18 @@ function App(): React.JSX.Element {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderContent()}
       </main>
+
+      {/* エンドロールプレビュー */}
+      {showEndRollPreview && currentView === 'home' && (
+        <EndRollColumn 
+          isPreview={true}
+          onClose={() => setShowEndRollPreview(false)}
+          onContinue={() => {
+            setShowEndRollPreview(false)
+            setCurrentView('column')
+          }}
+        />
+      )}
 
       {/* Footer */}
       <footer className="bg-black text-white py-8 mt-16 border-t border-gray-700">
