@@ -1,3 +1,6 @@
+/* フォントの読み込み */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600&display=swap');
+
 .end-roll-overlay {
   position: fixed;
   top: 0;
@@ -184,6 +187,3 @@
 
 /* 10個以降の段落は一律で2秒後に表示 */
 .column-paragraph:nth-child(n+11) { animation-delay: 2s; }
-
-/* フォントの読み込み */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600&display=swap');

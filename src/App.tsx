@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PlayerProfile from './components/PlayerProfile'
 import VoteChart from './components/VoteChart'
 import EndRollColumn from './components/EndRollColumn'
