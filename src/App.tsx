@@ -63,7 +63,7 @@ function App(): React.JSX.Element {
           <div className="mb-8">
             <img 
               src="/top.jpg" 
-              alt="高崎経済大学卓球部 最弱決定戦 2025.11.8" 
+              alt="高崎経済大学卓球部 部内リーグ最終戦 2025.11.8" 
               className="w-full max-w-4xl mx-auto rounded-lg shadow-2xl"
             />
           </div>
@@ -73,15 +73,18 @@ function App(): React.JSX.Element {
               TCUE-TT
             </h1>
             <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-              最弱決定戦
+              高崎経済大学卓球部 部内リーグ最終戦 2025.11.8
             </h2>
-            <p className="text-lg text-gray-300 mb-6">
-              高崎経済大学卓球部 最弱決定戦 2025.11.8
-            </p>
-            <div className="bg-gray-800 border-l-4 border-yellow-400 p-4 rounded-r-lg">
-              <p className="text-yellow-200 font-medium">
-                参加者のプロフィールを見るには、上のナビゲーションから選手を選択してください。
-              </p>
+          </div>
+
+          {/* 人物相関図セクション */}
+          <div className="mb-8">
+            <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
+              <img 
+                src="/relation.png" 
+                alt="選手相関図" 
+                className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
+              />
             </div>
           </div>
           
