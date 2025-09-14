@@ -7,6 +7,8 @@ export interface Player {
   birthPlace: string;
   warRecord: string[];
   profile: string;
+  coach: string;
+  profile_image: string;
   created_at?: string;
 }
 

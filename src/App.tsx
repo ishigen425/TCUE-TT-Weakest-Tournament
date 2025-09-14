@@ -154,12 +154,6 @@ function App(): React.JSX.Element {
             >
               📊 投票結果
             </button>
-            <button 
-              className={`nav-link whitespace-nowrap px-3 py-2 ${currentView === 'column' ? 'active' : ''}`}
-              onClick={() => setCurrentView('column')}
-            >
-              📖 コラム
-            </button>
             {PLAYERS.map(player => (
               <button 
                 key={player.id}
@@ -169,6 +163,12 @@ function App(): React.JSX.Element {
                 🏓 {player.name}
               </button>
             ))}
+            <button 
+              className={`nav-link whitespace-nowrap px-3 py-2 ${currentView === 'column' ? 'active' : ''}`}
+              onClick={() => setCurrentView('column')}
+            >
+              📖 コラム
+            </button>
           </div>
         </div>
       </nav>

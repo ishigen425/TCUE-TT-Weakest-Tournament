@@ -122,8 +122,16 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
       <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border border-gray-700 mb-8">
         <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
           <div className="relative">
-            <div className={`w-32 h-32 bg-gradient-to-br ${theme.gradient} rounded-full flex items-center justify-center text-black text-4xl font-bold shadow-lg`}>
-              {player.name.charAt(0)}
+            <div className={`w-32 h-32 bg-gradient-to-br ${theme.gradient} rounded-full flex items-center justify-center text-black text-4xl font-bold shadow-lg overflow-hidden`}>
+              {player.profile_image ? (
+                <img 
+                  src={player.profile_image} 
+                  alt={`${player.name}のプロフィール画像`}
+                  className="w-full h-full object-cover object-top"
+                />
+              ) : (
+                player.name.charAt(0)
+              )}
             </div>
             <div className={`absolute -bottom-2 -right-2 bg-gradient-to-r ${theme.gradient} text-black text-xs px-2 py-1 rounded-full font-medium`}>
               🏓 選手
@@ -134,14 +142,6 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
             <h1 className={`text-3xl md:text-4xl font-bold ${theme.primary} mb-2`}>{player.name}</h1>
             <p className={`text-lg ${theme.secondary} font-medium mb-4`}>最弱決定戦 参加者</p>
             
-            <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-              <span className={`${theme.badge} px-3 py-1 rounded-full text-sm font-medium border`}>
-                高崎経済大学卓球部
-              </span>
-              <span className="bg-gray-900 bg-opacity-50 text-gray-300 px-3 py-1 rounded-full text-sm font-medium border border-gray-700">
-                挑戦者
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -169,8 +169,8 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
                 <dd className="text-lg font-semibold text-white">粘り強いプレー</dd>
               </div>
               <div className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
-                <dt className="text-sm font-medium text-gray-400">目標</dt>
-                <dd className="text-lg font-semibold text-white">最弱の座を狙う</dd>
+                <dt className="text-sm font-medium text-gray-400">担当コーチ</dt>
+                <dd className="text-lg font-semibold text-white">{player.coach}</dd>
               </div>
             </div>
           </div>
@@ -179,13 +179,13 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
           <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border border-gray-700">
             <h2 className={`text-2xl font-bold ${theme.primary} mb-4 flex items-center`}>
               <span className="mr-2">💬</span>
-              選手コメント
+              調教師コメント
             </h2>
             <div className={`bg-gradient-to-r ${theme.sectionBg} bg-opacity-50 border-l-4 ${theme.accent} p-6 rounded-r-lg`}>
               <blockquote className="text-lg text-gray-200 italic leading-relaxed">
                 "{player.profile || "この大会で自分の実力を試したいと思います。最弱の座を目指して頑張ります！"}"
               </blockquote>
-              <cite className="block text-right text-sm text-gray-400 mt-4">- {player.name}</cite>
+              <cite className="block text-right text-sm text-gray-400 mt-4">- {player.coach}</cite>
             </div>
           </div>
         </div>
