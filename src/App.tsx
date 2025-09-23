@@ -98,11 +98,6 @@ function App(): React.JSX.Element {
                   onClick={() => setCurrentView(player.name)}
                 >
                   <h3 className={`text-xl font-semibold ${theme.accent} mb-2`}>{player.name}</h3>
-                  <p className="text-gray-300 text-sm overflow-hidden" style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical'
-                  }}>{player.profile}</p>
                   <button className={`${theme.button} text-black font-semibold py-2 px-4 rounded mt-4 w-full transition-colors duration-200`}>
                     プロフィールを見る
                   </button>

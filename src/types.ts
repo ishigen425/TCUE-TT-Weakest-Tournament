@@ -6,16 +6,9 @@ export interface Player {
   name: string;
   birthPlace: string;
   warRecord: string[];
-  profile: string;
+  strong_point: string;
   coach: string;
+  coach_comment: string;
   profile_image: string;
   created_at?: string;
-}
-
-// Supabaseからの選手データ
-export interface PlayerFromDB {
-  id: string;
-  name: string;
-  profile: string;
-  created_at: string;
 }

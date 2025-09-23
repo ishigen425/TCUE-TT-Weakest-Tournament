@@ -140,7 +140,6 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
           
           <div className="flex-1 text-center md:text-left">
             <h1 className={`text-3xl md:text-4xl font-bold ${theme.primary} mb-2`}>{player.name}</h1>
-            <p className={`text-lg ${theme.secondary} font-medium mb-4`}>最弱決定戦 参加者</p>
             
           </div>
         </div>
@@ -166,7 +165,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
               </div>
               <div className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
                 <dt className="text-sm font-medium text-gray-400">特技</dt>
-                <dd className="text-lg font-semibold text-white">粘り強いプレー</dd>
+                <dd className="text-lg font-semibold text-white">{player.strong_point}</dd>
               </div>
               <div className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-600">
                 <dt className="text-sm font-medium text-gray-400">担当コーチ</dt>
@@ -183,7 +182,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
             </h2>
             <div className={`bg-gradient-to-r ${theme.sectionBg} bg-opacity-50 border-l-4 ${theme.accent} p-6 rounded-r-lg`}>
               <blockquote className="text-lg text-gray-200 italic leading-relaxed">
-                "{player.profile || "この大会で自分の実力を試したいと思います。最弱の座を目指して頑張ります！"}"
+                {player.coach_comment}
               </blockquote>
               <cite className="block text-right text-sm text-gray-400 mt-4">- {player.coach}</cite>
             </div>
