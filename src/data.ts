@@ -47,7 +47,7 @@ export const PLAYERS: Player[] = [
       ],
     strong_point: 'チキータ',
     coach: '石川 元暉',
-    coach_comment: '日々マシン練習には取り組んでいるので、いつものプレーができれば結果もついてくるはず。',
+    coach_comment: 'カンボジアにラケットを持っていくも卓球できず、成田空港の荷物検査で卓球選手と嘘をついたので、それに見合うようなプレーを期待しています。',
     profile_image: '/profile-aus.jpg'
   }
 ]
