@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-// import PlayerProfile from './components/PlayerProfile'
 // import VoteChart from './components/VoteChart'
 import EndRollColumn from './components/EndRollColumn'
 import { PLAYERS } from './data'

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { insertVote } from '../supabase'
+// import { insertVote } from '../supabase'
 import VoteSuccessModal from './VoteSuccessModal'
 import type { Player, PlayerId } from '../types'
-import ComingSoon from './ComingSoon'
 
 interface PlayerTheme {
   primary: string
@@ -20,8 +19,8 @@ interface PlayerProfileProps {
 }
 
 function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
-  const [votedPlayer, setVotedPlayer] = useState<string>('')
-  const [isVoting, setIsVoting] = useState<boolean>(false)
+  // const [votedPlayer, setVotedPlayer] = useState<string>('')
+  // const [isVoting, setIsVoting] = useState<boolean>(false)
   const [showVoteModal, setShowVoteModal] = useState<boolean>(false)
 
   // 選手ごとの色テーマを決定する関数
@@ -92,26 +91,26 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
     }
   }, [player?.id])
 
-  const handleVote = async (): Promise<void> => {
-    if (votedPlayer || !player) return
+  // const handleVote = async (): Promise<void> => {
+  //   if (votedPlayer || !player) return
     
-    // 投票前の確認
-    const isConfirmed = confirm('1人1度しか投票できません。本当にそれで良いですか？')
-    if (!isConfirmed) return
+  //   // 投票前の確認
+  //   const isConfirmed = confirm('1人1度しか投票できません。本当にそれで良いですか？')
+  //   if (!isConfirmed) return
     
-    setIsVoting(true)
-    try {
-      await insertVote(player.id)
-      localStorage.setItem(localstorageKey, player.id)
-      setVotedPlayer(player.name) // 投票した選手名を状態に保存
-      setShowVoteModal(true) // 投票成功モーダルを表示
-    } catch (error) {
-      console.error('投票に失敗しました:', error)
-      alert('投票に失敗しました。もう一度お試しください。')
-    } finally {
-      setIsVoting(false)
-    }
-  }
+  //   setIsVoting(true)
+  //   try {
+  //     await insertVote(player.id)
+  //     localStorage.setItem(localstorageKey, player.id)
+  //     setVotedPlayer(player.name) // 投票した選手名を状態に保存
+  //     setShowVoteModal(true) // 投票成功モーダルを表示
+  //   } catch (error) {
+  //     console.error('投票に失敗しました:', error)
+  //     alert('投票に失敗しました。もう一度お試しください。')
+  //   } finally {
+  //     setIsVoting(false)
+  //   }
+  // }
 
   if (!player) {
     return (
