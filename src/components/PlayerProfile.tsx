@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { insertVote } from '../supabase'
 import VoteSuccessModal from './VoteSuccessModal'
 import type { Player, PlayerId } from '../types'
+import ComingSoon from './ComingSoon'
 
 interface PlayerTheme {
   primary: string
@@ -74,6 +75,10 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
 
   const theme = getPlayerTheme(player?.id || '')
   const localstorageKey = "voted_player";
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (!player) return
@@ -213,7 +218,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
           </div>
 
           {/* 投票セクション */}
-          <div className={`bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border-2 ${theme.buttonBorder} bg-gradient-to-br ${theme.sectionBg} bg-opacity-20`}>
+          {/* <div className={`bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border-2 ${theme.buttonBorder} bg-gradient-to-br ${theme.sectionBg} bg-opacity-20`}>
             <h2 className={`text-xl font-bold ${theme.primary} mb-4 flex items-center`}>
               <span className="mr-2">🗳️</span>
               投票
@@ -257,7 +262,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
                 投票ありがとうございました！
               </p>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 

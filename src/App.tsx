@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import EndRollColumn from './components/EndRollColumn'
 import { PLAYERS } from './data'
 import ComingSoon from './components/ComingSoon'
+import PlayerProfile from './components/PlayerProfile'
 
 type ViewType = 'home' | 'results' | 'column' | string
 
@@ -120,8 +121,7 @@ function App(): React.JSX.Element {
     const player = PLAYERS.find(p => p.name === currentView)
     return (
       <div className="max-w-4xl mx-auto">
-        {/* <PlayerProfile player={player} /> */}
-        <ComingSoon title={`${player?.name}のプロフィール`} message="プロフィールページは順次公開予定です。もうしばらくお待ちください 🙇" icon="🏓" />
+        <PlayerProfile player={player} />
       </div>
     )
   }
