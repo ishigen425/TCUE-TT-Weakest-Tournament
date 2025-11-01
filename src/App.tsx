@@ -77,6 +77,15 @@ function App(): React.JSX.Element {
             </h2>
           </div>
 
+          {/* グッズセクション */}
+          <div className="mb-8">
+            <img 
+              src="/goods.png" 
+              alt="オリジナルグッズ" 
+              className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
+            />
+          </div>
+
           {/* 人物相関図セクション */}
           <div className="mb-8">
             <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
