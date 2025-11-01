@@ -78,12 +78,18 @@ function App(): React.JSX.Element {
           </div>
 
           {/* グッズセクション */}
-          <div className="mb-8">
-            <img 
-              src="/goods.png" 
-              alt="オリジナルグッズ" 
-              className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
-            />
+          <div className="mb-8 relative">
+            <div className="relative inline-block w-full max-w-4xl mx-auto">
+              <img 
+                src="/goods.png" 
+                alt="オリジナルグッズ" 
+                className="w-full rounded-lg shadow-lg"
+              />
+              {/* Newアイコン */}
+              <div className="absolute top-3 left-3 bg-red-500 text-white font-bold px-4 py-2 rounded-full text-base shadow-lg">
+                NEW
+              </div>
+            </div>
           </div>
 
           {/* 人物相関図セクション */}
