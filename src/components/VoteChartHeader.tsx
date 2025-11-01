@@ -10,10 +10,10 @@ function VoteChartHeader({ totalVotes, winnerName }: VoteChartHeaderProps): Reac
     <div className="bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border border-gray-700 text-center">
       <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 flex items-center justify-center">
         <span className="mr-3">📊</span>
-        投票結果
+        最弱予想
       </h1>
-      <p className="text-lg text-gray-300 mb-6">
-        最弱決定戦の投票結果をリアルタイムで表示しています
+      <p className="text-lg text-gray-300 mb-2">
+        部内リーグ最終戦の<span className="font-bold text-yellow-400">最弱予想</span>の投票結果をリアルタイムで表示しています
       </p>
 
       {/* 統計情報 */}
@@ -24,7 +24,7 @@ function VoteChartHeader({ totalVotes, winnerName }: VoteChartHeaderProps): Reac
         </div>
         <div className="bg-yellow-900 bg-opacity-50 p-4 rounded-lg border border-yellow-700">
           <div className="text-2xl font-bold text-yellow-400">{winnerName || '-'}</div>
-          <div className="text-sm text-yellow-300">現在1位</div>
+          <div className="text-sm text-yellow-300">最弱予想1位</div>
         </div>
       </div>
     </div>

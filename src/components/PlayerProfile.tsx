@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-// import { insertVote } from '../supabase'
+import { insertVote, getVoteCounts } from '../supabase'
 import VoteSuccessModal from './VoteSuccessModal'
 import type { Player, PlayerId } from '../types'
+import { PLAYERS } from '../data'
 
 interface PlayerTheme {
   primary: string
@@ -19,9 +20,10 @@ interface PlayerProfileProps {
 }
 
 function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
-  // const [votedPlayer, setVotedPlayer] = useState<string>('')
-  // const [isVoting, setIsVoting] = useState<boolean>(false)
+  const [votedPlayer, setVotedPlayer] = useState<string>('')
+  const [isVoting, setIsVoting] = useState<boolean>(false)
   const [showVoteModal, setShowVoteModal] = useState<boolean>(false)
+  const [voteCount, setVoteCount] = useState<number>(0)
 
   // 選手ごとの色テーマを決定する関数
   const getPlayerTheme = (playerId: PlayerId): PlayerTheme => {
@@ -73,7 +75,8 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
   }
 
   const theme = getPlayerTheme(player?.id || '')
-  const localstorageKey = "voted_player";
+  const localstorageKey = "weaknest_voted_player";
+  const MAX_VOTE_COUNT = 9;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -82,35 +85,45 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
   useEffect(() => {
     if (!player) return
     // ローカルストレージで投票済みか確認
-    // 各端末で1回しか投票できないようにする
     const selectedPlayerId = localStorage.getItem(localstorageKey)
     if (selectedPlayerId) {
-      // setVotedPlayer(
-      //   PLAYERS.find(p => p.id === selectedPlayerId)?.name || ''
-      // )
+      setVotedPlayer(selectedPlayerId)
     }
+    // 投票数を取得
+    const fetchVoteCounts = async () => {
+      try {
+        const counts = await getVoteCounts()
+        setVoteCount(counts[player.id] || 0)
+      } catch (error) {
+        console.error('投票数の取得に失敗しました:', error)
+      }
+    }
+    fetchVoteCounts()
   }, [player?.id])
 
-  // const handleVote = async (): Promise<void> => {
-  //   if (votedPlayer || !player) return
+  const handleVote = async (): Promise<void> => {
+    if (votedPlayer || !player) return
     
-  //   // 投票前の確認
-  //   const isConfirmed = confirm('1人1度しか投票できません。本当にそれで良いですか？')
-  //   if (!isConfirmed) return
+    // 投票前の確認
+    const isConfirmed = confirm('1人1度しか投票できません。本当にこの人が最弱だと思いますか？')
+    if (!isConfirmed) return
     
-  //   setIsVoting(true)
-  //   try {
-  //     await insertVote(player.id)
-  //     localStorage.setItem(localstorageKey, player.id)
-  //     setVotedPlayer(player.name) // 投票した選手名を状態に保存
-  //     setShowVoteModal(true) // 投票成功モーダルを表示
-  //   } catch (error) {
-  //     console.error('投票に失敗しました:', error)
-  //     alert('投票に失敗しました。もう一度お試しください。')
-  //   } finally {
-  //     setIsVoting(false)
-  //   }
-  // }
+    setIsVoting(true)
+    try {
+      await insertVote(player.id)
+      localStorage.setItem(localstorageKey, player.id)
+      setVotedPlayer(player.id)
+      setVoteCount(voteCount + 1)
+      setShowVoteModal(true)
+    } catch (error) {
+      console.error('投票に失敗しました:', error)
+      alert('投票に失敗しました。もう一度お試しください。')
+    } finally {
+      setIsVoting(false)
+    }
+  }
+
+  const canVote = voteCount <= MAX_VOTE_COUNT
 
   if (!player) {
     return (
@@ -217,29 +230,53 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
           </div>
 
           {/* 投票セクション */}
-          {/* <div className={`bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border-2 ${theme.buttonBorder} bg-gradient-to-br ${theme.sectionBg} bg-opacity-20`}>
+          <div className={`bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-lg p-8 border-2 ${theme.buttonBorder} bg-gradient-to-br ${theme.sectionBg} bg-opacity-20`}>
             <h2 className={`text-xl font-bold ${theme.primary} mb-4 flex items-center`}>
               <span className="mr-2">🗳️</span>
-              投票
+              最弱予想投票
             </h2>
+            
+            {/* 投票数表示 */}
+            <div className="mb-4 p-3 rounded-lg bg-gray-800 bg-opacity-70 border border-gray-600">
+              <p className="text-sm text-gray-300">
+                現在の投票数: <span className={`font-bold text-lg ${theme.primary}`}>{voteCount}票</span>
+              </p>
+            </div>
+
+            {/* 投票不可メッセージ */}
+            {!canVote && !votedPlayer && (
+              <div className="mb-4 p-3 rounded-lg bg-red-900 bg-opacity-50 border border-red-700">
+                <p className="text-sm text-red-300">
+                  ⚠️ この選手の投票数は既に上限に達しています。他の選手に投票してください。
+                </p>
+              </div>
+            )}
+
             <p className="text-sm text-gray-300 mb-4">
-              この選手が最弱だと思ったら投票してください
+              この選手が<span className="font-bold text-yellow-400">最弱だと思ったら投票</span>してください
             </p>
             <button 
               onClick={handleVote} 
-              disabled={Boolean(votedPlayer) || isVoting}
+              disabled={Boolean(votedPlayer) || isVoting || !canVote}
               className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
                 votedPlayer 
                   ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
-                  : isVoting 
-                    ? `bg-gradient-to-r ${theme.button.split(' ')[0]} ${theme.button.split(' ')[1]} text-black cursor-wait` 
-                    : `bg-gradient-to-r ${theme.button} text-black transform hover:scale-105 shadow-lg hover:shadow-xl`
+                  : !canVote
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    : isVoting 
+                      ? `bg-gradient-to-r ${theme.button} text-black cursor-wait` 
+                      : `bg-gradient-to-r ${theme.button} text-black transform hover:scale-105 shadow-lg hover:shadow-xl`
               }`}
             >
               {votedPlayer ? (
                 <span className="flex items-center justify-center">
                   <span className="mr-2">✅</span>
-                  {votedPlayer}さんに投票済み
+                  {PLAYERS.find(x => x.id === votedPlayer)?.name}さんに投票済み
+                </span>
+              ) : !canVote ? (
+                <span className="flex items-center justify-center">
+                  <span className="mr-2">⚠️</span>
+                  投票数上限に達しています
                 </span>
               ) : isVoting ? (
                 <span className="flex items-center justify-center">
@@ -252,7 +289,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
               ) : (
                 <span className="flex items-center justify-center">
                   <span className="mr-2">🗳️</span>
-                  この選手に投票
+                  最弱予想として投票
                 </span>
               )}
             </button>
@@ -261,7 +298,7 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
                 投票ありがとうございました！
               </p>
             )}
-          </div> */}
+          </div>
         </div>
       </div>
 

@@ -4,7 +4,7 @@ import { PlayerId } from '../types'
 
 function UserVoteStatus(): React.JSX.Element {
   const [votedPlayerId, setVotedPlayerId] = useState<PlayerId | null>(null)
-  const localStorageKey = "voted_player"
+  const localStorageKey = "weaknest_voted_player"
 
   // 選手の画像を取得する関数
   const getPlayerImage = (playerId: PlayerId): string => {

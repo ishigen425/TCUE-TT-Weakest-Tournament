@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-// import VoteChart from './components/VoteChart'
 import EndRollColumn from './components/EndRollColumn'
 import { PLAYERS } from './data'
-import ComingSoon from './components/ComingSoon'
 import PlayerProfile from './components/PlayerProfile'
+import VoteChart from './components/VoteChart'
 
 type ViewType = 'home' | 'results' | 'column' | string
 
@@ -112,8 +111,7 @@ function App(): React.JSX.Element {
     if (currentView === 'results') {
       return (
         <div className="max-w-6xl mx-auto">
-          {/* <VoteChart /> */}
-          <ComingSoon title="投票結果" message="投票結果ページは順次公開予定です。もうしばらくお待ちください 🙇" icon="📊" />
+          <VoteChart />
         </div>
       )
     }
