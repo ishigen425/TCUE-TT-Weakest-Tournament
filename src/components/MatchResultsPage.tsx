@@ -54,7 +54,6 @@ function MatchResultsPage(): React.JSX.Element {
     }))
   }, [])
 
-  const champion = rankings[0]
   const weakest = rankings[rankings.length - 1]
 
   return (
