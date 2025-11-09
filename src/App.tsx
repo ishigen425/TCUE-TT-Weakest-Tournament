@@ -3,8 +3,9 @@ import EndRollColumn from './components/EndRollColumn'
 import { PLAYERS } from './data'
 import PlayerProfile from './components/PlayerProfile'
 import VoteChart from './components/VoteChart'
+import MatchResultsPage from './components/MatchResultsPage'
 
-type ViewType = 'home' | 'results' | 'column' | string
+type ViewType = 'home' | 'votes' | 'matches' | 'column' | string
 
 interface PlayerTheme {
   border: string
@@ -123,10 +124,17 @@ function App(): React.JSX.Element {
         </div>
       )
     }
-    if (currentView === 'results') {
+    if (currentView === 'votes') {
       return (
         <div className="max-w-6xl mx-auto">
           <VoteChart />
+        </div>
+      )
+    }
+    if (currentView === 'matches') {
+      return (
+        <div className="max-w-6xl mx-auto">
+          <MatchResultsPage />
         </div>
       )
     }
@@ -162,8 +170,14 @@ function App(): React.JSX.Element {
               🏠 ホーム
             </button>
             <button 
-              className={`nav-link whitespace-nowrap px-3 py-2 ${currentView === 'results' ? 'active' : ''}`}
-              onClick={() => setCurrentView('results')}
+              className={`nav-link whitespace-nowrap px-3 py-2 ${currentView === 'matches' ? 'active' : ''}`}
+              onClick={() => setCurrentView('matches')}
+            >
+              🏆 試合結果
+            </button>
+            <button 
+              className={`nav-link whitespace-nowrap px-3 py-2 ${currentView === 'votes' ? 'active' : ''}`}
+              onClick={() => setCurrentView('votes')}
             >
               📊 投票結果
             </button>

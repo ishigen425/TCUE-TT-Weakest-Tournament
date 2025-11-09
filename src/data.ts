@@ -1,5 +1,5 @@
 // 選手データ（定数）
-import { Player } from './types';
+import { Player, Match } from './types';
 
 export const PLAYERS: Player[] = [
   {
@@ -49,5 +49,36 @@ export const PLAYERS: Player[] = [
     coach: '石川 元暉',
     coach_comment: 'カンボジアにラケットを持っていくも卓球できず、成田空港の荷物検査で卓球選手と嘘をついたので、それに見合うようなプレーを期待しています。',
     profile_image: '/profile-aus.jpg'
+  }
+]
+
+// 試合結果データ
+export const MATCHES: Match[] = [
+  {
+    player1Id: 'austin',
+    player1Name: PLAYERS.find(p => p.id === 'austin')?.name!,
+    player1Score: 3,
+    player2Id: 'wakayama',
+    player2Name: PLAYERS.find(p => p.id === 'wakayama')?.name!,
+    player2Score: 1,
+    winnerId: 'austin'
+  },
+  {
+    player1Id: 'wakayama',
+    player1Name: PLAYERS.find(p => p.id === 'wakayama')?.name!,
+    player1Score: 3,
+    player2Id: 'kiuchi',
+    player2Name: PLAYERS.find(p => p.id === 'kiuchi')?.name!,
+    player2Score: 1,
+    winnerId: 'wakayama'
+  },
+  {
+    player1Id: 'austin',
+    player1Name: PLAYERS.find(p => p.id === 'austin')?.name!,
+    player1Score: 3,
+    player2Id: 'kiuchi',
+    player2Name: PLAYERS.find(p => p.id === 'kiuchi')?.name!,
+    player2Score: 2,
+    winnerId: 'austin'
   }
 ]
