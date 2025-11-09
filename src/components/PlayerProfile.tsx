@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { insertVote, getVoteCounts } from '../supabase'
 import VoteSuccessModal from './VoteSuccessModal'
 import type { Player, PlayerId } from '../types'
-import { PLAYERS } from '../data'
 
 interface PlayerTheme {
   primary: string
@@ -20,10 +18,10 @@ interface PlayerProfileProps {
 }
 
 function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
-  const [votedPlayer, setVotedPlayer] = useState<string>('')
-  const [isVoting, setIsVoting] = useState<boolean>(false)
+  // const [votedPlayer, setVotedPlayer] = useState<string>('')
+  // const [isVoting, setIsVoting] = useState<boolean>(false)
   const [showVoteModal, setShowVoteModal] = useState<boolean>(false)
-  const [voteCount, setVoteCount] = useState<number>(0)
+  // const [voteCount, setVoteCount] = useState<number>(0)
 
   // 選手ごとの色テーマを決定する関数
   const getPlayerTheme = (playerId: PlayerId): PlayerTheme => {
@@ -75,55 +73,11 @@ function PlayerProfile({ player }: PlayerProfileProps): React.JSX.Element {
   }
 
   const theme = getPlayerTheme(player?.id || '')
-  const localstorageKey = "weaknest_voted_player";
-  const MAX_VOTE_COUNT = 9;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (!player) return
-    // ローカルストレージで投票済みか確認
-    const selectedPlayerId = localStorage.getItem(localstorageKey)
-    if (selectedPlayerId) {
-      setVotedPlayer(selectedPlayerId)
-    }
-    // 投票数を取得
-    const fetchVoteCounts = async () => {
-      try {
-        const counts = await getVoteCounts()
-        setVoteCount(counts[player.id] || 0)
-      } catch (error) {
-        console.error('投票数の取得に失敗しました:', error)
-      }
-    }
-    fetchVoteCounts()
-  }, [player?.id])
-
-  const handleVote = async (): Promise<void> => {
-    if (votedPlayer || !player) return
-    
-    // 投票前の確認
-    const isConfirmed = confirm('1人1度しか投票できません。本当にこの人が最弱だと思いますか？')
-    if (!isConfirmed) return
-    
-    setIsVoting(true)
-    try {
-      await insertVote(player.id)
-      localStorage.setItem(localstorageKey, player.id)
-      setVotedPlayer(player.id)
-      setVoteCount(voteCount + 1)
-      setShowVoteModal(true)
-    } catch (error) {
-      console.error('投票に失敗しました:', error)
-      alert('投票に失敗しました。もう一度お試しください。')
-    } finally {
-      setIsVoting(false)
-    }
-  }
-
-  const canVote = voteCount <= MAX_VOTE_COUNT
 
   if (!player) {
     return (

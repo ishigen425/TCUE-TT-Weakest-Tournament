@@ -15,20 +15,6 @@ function MatchResultsPage(): React.JSX.Element {
     return '#f59e0b' // amber-500
   }
 
-  // 選手の画像を取得する関数
-  const getPlayerImage = (playerId: PlayerId): string => {
-    switch (playerId) {
-      case 'austin':
-        return '/aus.jpg'
-      case 'kiuchi':
-        return '/kiuch.jpg'
-      case 'wakayama':
-        return '/waka.jpg'
-      default:
-        return ''
-    }
-  }
-
   // 順位表を計算
   const rankings: Ranking[] = useMemo(() => {
     const stats: Record<string, { wins: number; losses: number }> = {}
