@@ -75,39 +75,16 @@ function MatchResultsPage(): React.JSX.Element {
             className="p-6 rounded-lg border-4"
             style={{ 
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              borderColor: getPlayerColor(champion.playerId)
-            }}
-          >
-            <div className="text-5xl mb-2">👑</div>
-            <div className="text-sm text-gray-400 mb-1">優勝</div>
-            <div 
-              className="text-2xl font-bold mb-2"
-              style={{ color: getPlayerColor(champion.playerId) }}
-            >
-              {champion.playerName}
-            </div>
-            <div className="text-lg text-white">
-              {champion.wins}勝{champion.losses}敗
-            </div>
-          </div>
-
-          <div 
-            className="p-6 rounded-lg border-4"
-            style={{ 
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
               borderColor: getPlayerColor(weakest.playerId)
             }}
           >
-            <div className="text-5xl mb-2">😢</div>
+            <img src={PLAYERS.find(p => p.id === weakest.playerId)?.profile_image} alt={weakest.playerName} className="w-24 h-24 object-cover rounded-lg mx-auto mb-4 border-2" style={{ borderColor: getPlayerColor(weakest.playerId) }} />
             <div className="text-sm text-gray-400 mb-1">最弱</div>
             <div 
               className="text-2xl font-bold mb-2"
               style={{ color: getPlayerColor(weakest.playerId) }}
             >
               {weakest.playerName}
-            </div>
-            <div className="text-lg text-white">
-              {weakest.wins}勝{weakest.losses}敗
             </div>
           </div>
         </div>
@@ -149,27 +126,13 @@ function MatchResultsPage(): React.JSX.Element {
                       className="w-16 h-16 object-cover rounded-lg border-2"
                       style={{ borderColor: playerColor }}
                     />
-
-                    {/* 選手名 */}
-                    <div>
-                      <div 
-                        className="text-xl font-bold mb-1"
-                        style={{ color: playerColor }}
-                      >
-                        {ranking.playerName}
-                      </div>
-                      <div className="text-sm text-gray-400">
-                        {ranking.wins}勝 {ranking.losses}敗
-                      </div>
-                    </div>
                   </div>
 
-                  {/* 勝率 */}
+                  {/* 勝敗 */}
                   <div className="text-right">
                     <div className="text-2xl font-bold text-white">
-                      {ranking.winRate.toFixed(0)}%
+                      {ranking.wins}勝{ranking.losses}敗
                     </div>
-                    <div className="text-sm text-gray-400">勝率</div>
                   </div>
                 </div>
               </div>
@@ -211,8 +174,6 @@ function MatchResultsPage(): React.JSX.Element {
                         className="text-lg font-bold flex items-center"
                         style={{ color: player1Color }}
                       >
-                        {match.player1Name}
-                        {isPlayer1Winner && <span className="ml-2 text-yellow-400">👑</span>}
                       </div>
                     </div>
                   </div>
@@ -233,8 +194,6 @@ function MatchResultsPage(): React.JSX.Element {
                         className="text-lg font-bold flex items-center justify-end"
                         style={{ color: player2Color }}
                       >
-                        {!isPlayer1Winner && <span className="mr-2 text-yellow-400">👑</span>}
-                        {match.player2Name}
                       </div>
                     </div>
                     <img
